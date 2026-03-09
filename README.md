@@ -48,6 +48,7 @@ jobs:
 | `format`    | Format code (must be idempotent)             |
 | `lint`      | Run linters                                  |
 | `test:ci`   | Run tests, output JUnit XML to `reports/junit.xml` |
+| `vuln:ci`   | Run vulnerability scan                       |
 
 The workflow enforces that `generate` and `format` produce no uncommitted changes.
 
@@ -57,7 +58,7 @@ Pre-built task implementations you can include in your repo's `Taskfile.yml`:
 
 ### Go — `taskfiles/go.yml`
 
-Requires these tools in `.mise.toml`: `golangci-lint`, `gotestsum`, `govulncheck`.
+Requires these tools in `.mise.toml`: `golangci-lint`, `gotestsum`, `osv-scanner`, `gofumpt`, `task`.
 
 > **Note:** Unlike Taskfile, mise does not support remote config inheritance. Copy `mise/go.toml` from this repo as your `.mise.toml` starting point, then pin versions as needed.
 

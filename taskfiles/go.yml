@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 tasks:
   setup:
@@ -15,7 +15,7 @@ tasks:
   format:
     desc: Format Go code with gofmt
     cmds:
-      - gofmt -w .
+      - gofumpt -l -w .
 
   lint:
     desc: Run golangci-lint
@@ -29,6 +29,6 @@ tasks:
       - gotestsum --junitfile reports/junit.xml ./...
 
   vuln:ci:
-    desc: Run govulncheck vulnerability scan
+    desc: Run osv-scanner vulnerability scan
     cmds:
-      - govulncheck ./...
+      - osv-scanner scan --source .
