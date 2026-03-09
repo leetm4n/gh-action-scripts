@@ -2,22 +2,12 @@ name: Test Go Defaults
 
 on:
   push:
-    paths:
-      - taskfiles/go.yml
-      - mise/go.toml
-      - tests/go/**
-      - .github/workflows/ci.yaml
-      - .github/workflows/test-go-defaults.yml
+    paths-ignore:
+      - "**/*.md"
   pull_request:
-    paths:
-      - taskfiles/go.yml
-      - mise/go.toml
-      - tests/go/**
-      - .github/workflows/ci.yaml
-      - .github/workflows/test-go-defaults.yml
+    paths-ignore:
+      - "**/*.md"
 
 jobs:
   ci:
     uses: ./.github/workflows/ci.yaml
-    with:
-      working-directory: tests/go

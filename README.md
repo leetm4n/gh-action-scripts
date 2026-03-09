@@ -47,41 +47,44 @@ jobs:
 | `generate`  | Run code generation                          |
 | `format`    | Format code (must be idempotent)             |
 | `lint`      | Run linters                                  |
+| `build`     | Build the project                            |
 | `test:ci`   | Run tests, output JUnit XML to `reports/junit.xml` |
 | `vuln:ci`   | Run vulnerability scan                       |
 
 The workflow enforces that `generate` and `format` produce no uncommitted changes.
 
-## Default Taskfiles
+## Go Defaults
 
-Pre-built task implementations you can include in your repo's `Taskfile.yml`:
+This repo provides ready-to-use `mise.toml` and `Taskfile.yml` for Go projects. Copy them into your repo root — no extension or inclusion needed.
 
-### Go — `taskfiles/go.yml`
-
-Requires these tools in `mise.toml`: `golangci-lint`, `gotestsum`, `osv-scanner`, `gofumpt`, `task`.
-
-> **Note:** Unlike Taskfile, mise does not support remote config inheritance. Copy `mise/go.toml` from this repo as your `mise.toml` starting point, then pin versions as needed.
-
-```yaml
-# Taskfile.yml
-includes:
-  go:
-    taskfile: https://raw.githubusercontent.com/peteresztari/gh-action-scripts/main/taskfiles/go.yml
-    optional: true
-
-tasks:
-  setup:
-    cmds:
-      - task: go:setup
-      - npm install  # add repo-specific steps
+```sh
+# From your repo root
+curl -O https://raw.githubusercontent.com/peteresztari/gh-action-scripts/main/mise.toml
+curl -O https://raw.githubusercontent.com/peteresztari/gh-action-scripts/main/Taskfile.yml
 ```
 
-Or use the tasks directly without renaming by flattening includes:
+**`mise.toml`** — pinned tool versions:
 
-```yaml
-includes:
-  default:
-    taskfile: https://raw.githubusercontent.com/peteresztari/gh-action-scripts/main/taskfiles/go.yml
-```
+| Tool             | Description          |
+|------------------|----------------------|
+| `go`             | Go compiler          |
+| `golangci-lint`  | Linter               |
+| `gotestsum`      | Test runner (JUnit)  |
+| `osv-scanner`    | Vulnerability scanner|
+| `gofumpt`        | Formatter            |
+| `task`           | Taskfile runner      |
 
-This exposes `task setup`, `task generate`, `task format`, `task lint`, `task test:ci`, `task vuln:ci` directly. Override any task in your own `Taskfile.yml` to replace the default.
+**`Taskfile.yml`** — all required CI tasks plus a local `ci` task:
+
+| Task        | Description                                  |
+|-------------|----------------------------------------------|
+| `setup`     | `go mod download` + `go mod verify`          |
+| `build`     | `go build ./...`                             |
+| `generate`  | `go generate ./...`                          |
+| `format`    | `gofumpt -l -w .`                            |
+| `lint`      | `golangci-lint run ./...`                    |
+| `test:ci`   | `gotestsum` with JUnit XML to `reports/`     |
+| `vuln:ci`   | `osv-scanner scan -r .`                      |
+| `ci`        | Runs the full pipeline locally               |
+
+Adjust tool versions in `mise.toml` and task commands in `Taskfile.yml` to fit your project.

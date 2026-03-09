@@ -7,6 +7,11 @@ tasks:
       - go mod download
       - go mod verify
 
+  build:
+    desc: Build the Go project
+    cmds:
+      - go build ./...
+
   generate:
     desc: Run go generate
     cmds:
@@ -31,4 +36,15 @@ tasks:
   vuln:ci:
     desc: Run osv-scanner vulnerability scan
     cmds:
-      - osv-scanner scan --source .
+      - osv-scanner scan -r .
+
+  ci:
+    desc: Run the full CI pipeline
+    cmds:
+      - task setup
+      - task generate
+      - task format
+      - task lint
+      - task build
+      - task test:ci
+      - task vuln:ci
