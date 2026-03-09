@@ -6,7 +6,7 @@ Opinionated, reusable GitHub Actions CI fragments for use across repos.
 
 All consuming repos must follow these conventions:
 
-- **[mise](https://mise.jdx.dev/)** — tool version management (`.mise.toml` in repo root)
+- **[mise](https://mise.jdx.dev/)** — tool version management (`mise.toml` in repo root)
 - **[Taskfile](https://taskfile.dev/)** — task runner (`Taskfile.yml` in repo root)
 
 ## Available Workflows
@@ -58,9 +58,9 @@ Pre-built task implementations you can include in your repo's `Taskfile.yml`:
 
 ### Go — `taskfiles/go.yml`
 
-Requires these tools in `.mise.toml`: `golangci-lint`, `gotestsum`, `osv-scanner`, `gofumpt`, `task`.
+Requires these tools in `mise.toml`: `golangci-lint`, `gotestsum`, `osv-scanner`, `gofumpt`, `task`.
 
-> **Note:** Unlike Taskfile, mise does not support remote config inheritance. Copy `mise/go.toml` from this repo as your `.mise.toml` starting point, then pin versions as needed.
+> **Note:** Unlike Taskfile, mise does not support remote config inheritance. Copy `mise/go.toml` from this repo as your `mise.toml` starting point, then pin versions as needed.
 
 ```yaml
 # Taskfile.yml
