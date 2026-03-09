@@ -93,7 +93,7 @@ curl -O https://raw.githubusercontent.com/peteresztari/gh-action-scripts/main/Ta
 |------------------|----------------------|
 | `go`             | Go compiler          |
 | `golangci-lint`  | Linter               |
-| `gotestsum`      | Test runner (JUnit)  |
+| `gotestsum`      | Test runner          |
 | `osv-scanner`    | Vulnerability scanner|
 | `gofumpt`        | Formatter            |
 | `task`           | Taskfile runner      |
