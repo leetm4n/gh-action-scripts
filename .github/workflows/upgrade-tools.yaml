@@ -1,0 +1,51 @@
+name: Upgrade Tools
+
+on:
+  workflow_call:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: jdx/mise-action@v3
+        with:
+          install: true
+          cache: false
+
+      - name: upgrade all tools
+        run: mise upgrade
+
+      - name: check for changes
+        id: diff
+        run: |
+          if [[ -n $(git diff -- mise.toml) ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: show upgrades
+        if: steps.diff.outputs.changed == 'true'
+        run: git diff -- mise.toml
+
+      - name: create pull request
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: chore/upgrade-tools
+          commit-message: "chore: upgrade mise tool versions"
+          title: "chore: upgrade mise tool versions"
+          body: |
+            Automated tool version upgrades via `mise upgrade`.
+
+            Review the changes to `mise.toml` and ensure CI passes before merging.
+          labels: dependencies
