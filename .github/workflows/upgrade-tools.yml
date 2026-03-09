@@ -1,0 +1,10 @@
+name: Upgrade Tools
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  upgrade:
+    uses: ./.github/workflows/shared/upgrade-tools.yaml

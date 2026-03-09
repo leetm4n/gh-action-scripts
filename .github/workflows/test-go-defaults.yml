@@ -10,4 +10,4 @@ on:
 
 jobs:
   ci:
-    uses: ./.github/workflows/ci.yaml
+    uses: ./.github/workflows/shared/ci.yaml

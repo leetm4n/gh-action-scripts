@@ -9,11 +9,13 @@ All consuming repos must follow these conventions:
 - **[mise](https://mise.jdx.dev/)** — tool version management (`mise.toml` in repo root)
 - **[Taskfile](https://taskfile.dev/)** — task runner (`Taskfile.yml` in repo root)
 
-## Available Workflows
+## Reusable Workflows
 
-### `ci.yaml` — Reusable CI Pipeline
+All reusable workflows live in `.github/workflows/shared/` and are triggered via `workflow_call`.
 
-A standard CI workflow covering setup, codegen, formatting, lint, and tests.
+### `shared/ci.yaml` — CI Pipeline
+
+A standard CI workflow covering setup, codegen, formatting, lint, build, tests, and vulnerability scanning.
 
 **Reference it from your repo:**
 
@@ -28,7 +30,7 @@ on:
 
 jobs:
   ci:
-    uses: peteresztari/gh-action-scripts/.github/workflows/ci.yaml@main
+    uses: peteresztari/gh-action-scripts/.github/workflows/shared/ci.yaml@main
     with:
       upload-artifacts: true   # optional, default: false
 ```
@@ -52,6 +54,28 @@ jobs:
 | `vuln:ci`   | Run vulnerability scan                       |
 
 The workflow enforces that `generate` and `format` produce no uncommitted changes.
+
+### `shared/upgrade-tools.yaml` — Tool Version Upgrades
+
+Runs `mise upgrade`, and if `mise.toml` changed, creates a PR with the updated versions.
+
+**Reference it from your repo:**
+
+```yaml
+# .github/workflows/upgrade-tools.yaml
+name: Upgrade Tools
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  upgrade:
+    uses: peteresztari/gh-action-scripts/.github/workflows/shared/upgrade-tools.yaml@main
+```
+
+Requires `contents: write` and `pull-requests: write` permissions (set in the reusable workflow).
 
 ## Go Defaults
 
