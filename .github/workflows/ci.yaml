@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  workflow_call:
+    inputs:
+      upload-artifacts:
+        type: boolean
+        default: false
+      working-directory:
+        type: string
+        default: '.'
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: jdx/mise-action@v3
+        with:
+          install: true
+          cache: true
+        env:
+          MISE_CONFIG_FILE: ${{ github.workspace }}/${{ inputs.working-directory }}/.mise.toml
+
+      - name: setup deps
+        run: task setup
+
+      - name: run codegen
+        run: task generate
+
+      - name: run formatting
+        run: task format
+
+      - name: check for changes
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "There are changes in the generated code. Please commit and push them."
+            git status --porcelain
+            exit 1
+          else
+            echo "No changes in the generated code."
+          fi
+
+      - name: run lint
+        run: task lint
+
+      - name: run tests
+        run: task test:ci
+
+      - name: upload test results
+        if: ${{ (success() || failure()) && inputs.upload-artifacts }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: ${{ inputs.working-directory }}/reports/junit.xml
+
+      - name: run vulnerability scan
+        run: task vuln:ci
