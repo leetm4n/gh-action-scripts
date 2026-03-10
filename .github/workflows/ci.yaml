@@ -15,8 +15,8 @@ jobs:
 
       - name: check if Taskfile exists
         run: |
-          if [ ! -f "Taskfile.yml" ]; then
-            echo "Taskfile.yml not found. Please create one in the root of the repository."
+          if [ ! -f "Taskfile.yml" ] && [ ! -f "Taskfile.yaml" ]; then
+            echo "Taskfile.yml or Taskfile.yaml not found. Please create one in the root of the repository."
             exit 1
           fi
 

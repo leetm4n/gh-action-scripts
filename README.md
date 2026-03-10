@@ -7,7 +7,7 @@ Opinionated, reusable GitHub Actions CI fragments for use across repos.
 All consuming repos must follow these conventions:
 
 - **[mise](https://mise.jdx.dev/)** — tool version management (`mise.toml` in repo root)
-- **[Taskfile](https://taskfile.dev/)** — task runner (`Taskfile.yml` in repo root)
+- **[Taskfile](https://taskfile.dev/)** — task runner (`Taskfile.yml` or `Taskfile.yaml` in repo root)
 
 ## Reusable Workflows
 
