@@ -11,9 +11,9 @@ All consuming repos must follow these conventions:
 
 ## Reusable Workflows
 
-All reusable workflows live in `.github/workflows/shared/` and are triggered via `workflow_call`.
+All reusable workflows live in `.github/workflows/` and are triggered via `workflow_call`.
 
-### `shared/ci.yaml` — CI Pipeline
+### `ci.yaml` — CI Pipeline
 
 A standard CI workflow covering setup, codegen, formatting, lint, build, tests, and vulnerability scanning.
 
@@ -30,7 +30,7 @@ on:
 
 jobs:
   ci:
-    uses: peteresztari/gh-action-scripts/.github/workflows/shared/ci.yaml@main
+    uses: leetm4n/gh-action-scripts/.github/workflows/ci.yaml@main
     with:
       upload-artifacts: true   # optional, default: false
 ```
@@ -55,7 +55,7 @@ jobs:
 
 The workflow enforces that `generate` and `format` produce no uncommitted changes.
 
-### `shared/upgrade-tools.yaml` — Tool Version Upgrades
+### `upgrade-tools.yaml` — Tool Version Upgrades
 
 Runs `mise upgrade`, and if `mise.toml` changed, creates a PR with the updated versions.
 
@@ -72,10 +72,45 @@ on:
 
 jobs:
   upgrade:
-    uses: peteresztari/gh-action-scripts/.github/workflows/shared/upgrade-tools.yaml@main
+    uses: leetm4n/gh-action-scripts/.github/workflows/upgrade-tools.yaml@main
 ```
 
 Requires `contents: write` and `pull-requests: write` permissions (set in the reusable workflow).
+
+### `railway-deploy.yaml` — Deploy to Railway
+
+Deploys a service to [Railway](https://railway.app/) using the Railway CLI.
+
+**Reference it from your repo:**
+
+```yaml
+# .github/workflows/deploy.yaml
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    uses: leetm4n/gh-action-scripts/.github/workflows/railway-deploy.yaml@main
+    with:
+      service: my-service
+    secrets:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+```
+
+**Inputs:**
+
+| Input     | Type   | Required | Description                    |
+|-----------|--------|----------|--------------------------------|
+| `service` | string | yes      | Railway service name to deploy |
+
+**Secrets:**
+
+| Secret          | Required | Description        |
+|-----------------|----------|--------------------|
+| `RAILWAY_TOKEN` | yes      | Railway API token  |
 
 ## Go Defaults
 
@@ -83,8 +118,8 @@ This repo provides ready-to-use `mise.toml` and `Taskfile.yml` for Go projects. 
 
 ```sh
 # From your repo root
-curl -O https://raw.githubusercontent.com/peteresztari/gh-action-scripts/main/mise.toml
-curl -O https://raw.githubusercontent.com/peteresztari/gh-action-scripts/main/Taskfile.yml
+curl -O https://raw.githubusercontent.com/leetm4n/gh-action-scripts/main/mise.toml
+curl -O https://raw.githubusercontent.com/leetm4n/gh-action-scripts/main/Taskfile.yml
 ```
 
 **`mise.toml`** — pinned tool versions:
