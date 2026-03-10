@@ -70,6 +70,10 @@ on:
     - cron: "0 6 * * 1"
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   upgrade:
     uses: leetm4n/gh-action-scripts/.github/workflows/upgrade-tools.yaml@main
