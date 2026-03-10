@@ -7,4 +7,4 @@ on:
 
 jobs:
   upgrade:
-    uses: ./.github/workflows/shared/upgrade-tools.yaml
+    uses: ./.github/workflows/upgrade-tools.yaml
