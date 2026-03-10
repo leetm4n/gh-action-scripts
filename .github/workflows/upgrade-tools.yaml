@@ -19,7 +19,7 @@ jobs:
           cache: false
 
       - name: upgrade all tools
-        run: mise upgrade
+        run: mise upgrade --bump
 
       - name: check for changes
         id: diff
