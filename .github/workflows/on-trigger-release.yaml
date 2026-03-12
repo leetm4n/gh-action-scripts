@@ -1,0 +1,11 @@
+name: Release Manually
+
+on:
+  workflow_dispatch:
+
+permissions:
+  content: write
+
+jobs:
+  release:
+    uses: ./.github/workflows/release.yaml
