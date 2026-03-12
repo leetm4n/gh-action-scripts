@@ -14,6 +14,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: check if .semver.yaml exists
+        run: |
+          if [ ! -f ".semver.yaml" ]; then
+            echo ".semver.yaml not found. Please create one in the root of the repository."
+            exit 1
+          fi
+
       - name: Install Go Semver Release
         run: |
           curl -SL https://github.com/s0ders/go-semver-release/releases/latest/download/go-semver-release-linux-amd64 -o ./go-semver-release \

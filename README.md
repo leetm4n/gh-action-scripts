@@ -116,6 +116,30 @@ jobs:
 |-----------------|----------|--------------------|
 | `RAILWAY_TOKEN` | yes      | Railway API token  |
 
+### `release.yaml` — Semver Release
+
+Automatically determines the next semantic version from conventional commit messages using [go-semver-release](https://github.com/s0ders/go-semver-release), tags the repo, and creates a GitHub Release.
+
+**Reference it from your repo:**
+
+```yaml
+# .github/workflows/release.yaml
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    uses: leetm4n/gh-action-scripts/.github/workflows/release.yaml@main
+```
+
+Requires `contents: write` permissions and a `.semver.yaml` config file in the repo root (see [go-semver-release docs](https://github.com/s0ders/go-semver-release)).
+
 ## Go Defaults
 
 This repo provides ready-to-use `mise.toml` and `Taskfile.yml` for Go projects. Copy them into your repo root — no extension or inclusion needed.
