@@ -6,7 +6,6 @@ on:
 jobs:
   versioning:
     runs-on: ubuntu-latest
-    needs: build-and-test
     outputs:
       release: ${{ steps.go-semver.outputs.NEW_RELEASE }}
       semver: ${{ steps.go-semver.outputs.SEMVER }}
@@ -20,9 +19,7 @@ jobs:
 
       - name: Go Semver Release
         id: go-semver
-        env:
-          GO_SEMVER_RELEASE_ACCESS_TOKEN: ${{ secrets.accessToken }}
-        run: ./go-semver-release release https://github.com/my/repo.git --config .semver.yaml
+        run: ./go-semver-release release . --dry-run
 
   release:
     runs-on: ubuntu-latest
