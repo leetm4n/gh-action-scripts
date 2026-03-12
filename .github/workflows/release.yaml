@@ -21,7 +21,13 @@ jobs:
 
       - name: Go Semver Release
         id: go-semver
-        run: ./go-semver-release release . --dry-run
+        run: |
+          OUTPUT=$(./go-semver-release release . --dry-run)
+          echo "$OUTPUT"
+          NEW_RELEASE=$(echo "$OUTPUT" | jq -r '.releases[0].new_release')
+          VERSION=$(echo "$OUTPUT" | jq -r '.releases[0].version')
+          echo "NEW_RELEASE=$NEW_RELEASE" >> "$GITHUB_OUTPUT"
+          echo "SEMVER=v$VERSION" >> "$GITHUB_OUTPUT"
 
   release:
     runs-on: ubuntu-latest
