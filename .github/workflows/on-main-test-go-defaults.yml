@@ -14,4 +14,6 @@ jobs:
 
   release:
     needs: ci
+    permissions:
+      contents: write
     uses: ./.github/workflows/release.yaml
